@@ -1,0 +1,37 @@
+{% extends "staff_base.html" %}
+{% set page = 'dashboard' %}
+{% block title %}Staff Dashboard{% endblock %}
+
+{% block content %}
+    <h2 class="mb-4 text-primary">Staff Dashboard</h2>
+
+    <div>
+        <h4 style="background:#9907d3; color:white; padding:2px 8px; display:inline-block; border-radius:4px;">Hotels Registered by You</h4>
+        <div style="margin-left:8px;">
+            {% if hotels and hotels|length > 0 %}
+                <ul>
+                {% for hotel in hotels %}
+                    <li>{{ hotel.hotel_name }}</li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p style="color:#444;">No hotels found.</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="mt-4">
+        <h4 style="font-weight:600;">Food Items Added by You</h4>
+        <div style="margin-left:8px;">
+            {% if food_items and food_items|length > 0 %}
+                <ul>
+                {% for food in food_items %}
+                    <li>{{ food.food_name }}</li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p style="color:#444;">No food items found.</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

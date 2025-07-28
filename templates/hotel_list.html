@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Available Hotels</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #8DA99D;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .navbar {
+      background-color: #f2f2f2;
+    }
+
+    .navbar-brand {
+      color: #000000;
+      font-weight: bold;
+      font-size: 24px;
+    }
+
+    .section-heading {
+      text-align: center;
+      color: #fefefe;
+      font-size: 32px;
+      font-weight: 700;
+      margin-top: 30px;
+      margin-bottom: 20px;
+    }
+
+    .hotel-card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+      transition: transform 0.3s;
+      height: 100%;
+    }
+
+    .hotel-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .btn-book {
+    background: #38b000;
+    color: white;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 6px;
+    font-weight: 500;
+    text-decoration: none;
+    margin-top: 32px !important;   /* Increased space above Book button */
+    display: inline-block;
+    }
+
+    .btn-book:hover {
+      background: #70e000;
+      color: black;
+    }
+
+    .no-hotels {
+      text-align: center;
+      color: #555;
+      font-style: italic;
+      margin-top: 20px;
+    }
+
+    .back-link {
+      display: block;
+      text-align: center;
+      margin: 20px auto;
+      color: #2d6a4f;
+      font-weight: 500;
+      text-decoration: underline;
+    }
+
+    /* --- Hotel Name Font & Spacing --- */
+    h5.text-success {
+      color: #6c6e2b !important;
+      margin-bottom: 18px;
+      font-family: 'Segoe UI', 'Arial', sans-serif;
+      font-weight: 600;
+      font-size: 1.6rem;
+      letter-spacing: 0.5px;
+       text-shadow:
+        0 0 8px #fff,
+        0 0 18px #e0e0e0,
+        0 1px 0 #b9b9b9;
+    }
+
+    /* Details inside the card: clean italic for soft feel */
+    .hotel-card p {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      font-size: 1.07rem;
+      font-style: italic;
+      font-weight: 400;
+      color: #232a3b;
+      line-height: 1.5;
+      margin-bottom: 6px;
+    }
+
+    /* More space under Foods only (optionally, remove if not needed) */
+    .hotel-card p:last-of-type {
+      margin-bottom: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="#">Hotel Booking</a>
+    </div>
+  </nav>
+
+  <!-- Heading -->
+  <h2 class="section-heading">Available Hotels</h2>
+  <a class="back-link" href="/guest/dashboard">&larr; Back to Dashboard</a>
+
+  <!-- Hotel Cards -->
+  <div class="container my-4">
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+      {% for hotel in hotels %}
+      <div class="col">
+        <div class="hotel-card">
+          <h5 class="text-success">{{ hotel.hotel_name }}</h5>
+          <p><strong>Address:</strong> {{ hotel.address }}</p>
+          <p><strong>Rooms:</strong> {{ hotel.number_of_rooms }}</p>
+          <p><strong>Foods:</strong>
+            {% if hotel.food_options %}
+              {{ hotel.food_options }}
+            {% else %}
+              <span class="text-muted">Not Available</span>
+            {% endif %}
+          </p>
+          <a href="/book/{{ hotel.id }}" class="btn-book">Book</a>
+        </div>
+      </div>
+      {% else %}
+        <p class="no-hotels">No hotels available.</p>
+      {% endfor %}
+    </div>
+  </div>
+
+</body>
+</html>

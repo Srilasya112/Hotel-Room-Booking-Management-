@@ -1,0 +1,43 @@
+{% extends "staff_base.html" %}
+{% set page = 'add_room' %}
+{% block title %}Add Room{% endblock %}
+
+{% block content %}
+<h2 class="mb-4 text-primary">Add New Room to Your Hotel</h2>
+<form method="POST">
+    <div class="mb-3">
+        <label class="form-label">Hotel</label>
+        <select class="form-select" name="hotel_id" required>
+            <option value="">Select Hotel</option>
+            {% for hotel in hotels %}
+                <option value="{{ hotel.id }}">{{ hotel.hotel_name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="mb-3">
+        <label for="room_number" class="form-label">Room Number</label>
+        <input type="text" class="form-control" id="room_number" name="room_number" required>
+    </div>
+    <div class="mb-3">
+        <label for="room_type" class="form-label">Room Type</label>
+        <select class="form-select" name="room_type" id="room_type" required>
+            <option value="">Select</option>
+            <option>Single</option>
+            <option>Double</option>
+            <option>Suite</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label for="price" class="form-label">Price (per night)</label>
+        <input type="number" class="form-control" id="price" name="price" step="0.01" required>
+    </div>
+    <button type="submit" class="btn btn-success">Add Room</button>
+</form>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-warning mt-3">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+{% endblock %}

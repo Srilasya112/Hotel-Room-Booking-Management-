@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Book {{ hotel.hotel_name }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Montserrat', 'Segoe UI', sans-serif;
+            background: #f1f2f2;
+            color: #fff;
+        }
+        .booking-wrapper {
+            display: flex;
+            max-width: 960px;
+            margin: 44px auto;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 10px 36px rgb(0 0 0 / 0.7);
+            background: none;
+            min-height: 75vh;
+        }
+        .illustration-panel {
+            flex: 1.1;
+            background: linear-gradient(180deg, #fbfbfb 0%, #e8fbe3 45%, #c8ffc0 100%);
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+            min-height: 100vh;
+            height: 100%;
+        }
+        .illustration-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 36px 24px 0 24px;
+        }
+        .pic-title {
+            text-align: center;
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #0b305e;
+            margin-bottom: 40px;
+        }
+        .pic-caption {
+            text-align: center;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #145441;
+            margin-bottom: 20px;
+            max-width: 90%;
+        }
+        .illustration-content {
+            flex: 1 1 0%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .illustration-panel img {
+            width: 410px;
+            height: 490px;
+            max-width: 100%;
+            max-height: 350px;
+            border-radius: 14px;
+            user-select: none;
+            object-fit: contain;
+            box-shadow: 0 4px 32px #b7e5cb5a;
+        }
+        .form-panel {
+            flex: 1.2;
+            background: #102f4b;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 44px 32px;
+        }
+        .reservation-heading {
+            color: #ffe620;
+            font-size: 1.48rem;
+            font-weight: 700;
+            margin-bottom: 28px;
+            margin-top: 0;
+            letter-spacing: 0.5px;
+            border-bottom: 2.6px solid #ffe620;
+            padding-bottom: 8px;
+            text-align: left;
+        }
+        .booking-form label {
+            display: block;
+            font-size: 0.99rem;
+            font-weight: 500;
+            color: #ffe620;
+            margin-bottom: 7px;
+            letter-spacing: 0.5px;
+        }
+        .booking-form input,
+        .booking-form select {
+            width: 100%;
+            padding: 12px 12px;
+            border-radius: 7px;
+            border: none;
+            margin-bottom: 24px;
+            background: #fff;
+            color: #222;
+            font-size: 1rem;
+            outline: none;
+        }
+        .booking-form select {
+            background: #f8f8f8;
+        }
+        .booking-form input:focus,
+        .booking-form select:focus {
+            background: #f9fdda;
+        }
+        .form-section-title {
+            color: #ffe620;
+            font-size: 1.05rem;
+            margin-bottom: 12px;
+            font-weight: 600;
+            margin-top: 10px;
+            border-bottom: 1px solid #ffe62033;
+            padding-bottom: 4px;
+            letter-spacing: 0.2px;
+        }
+        .food-items-list {
+            margin-bottom: 18px;
+            padding: 0;
+            border-bottom: 1px solid #ffe62022;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+        }
+        .food-item-row {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 0;
+            padding: 6px 0;
+            color: white;
+            font-size: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            width: 100%;
+            margin: 0;
+        }
+        .food-name {
+            flex: 1 1 0%;
+            padding-left: 0;
+            text-align: left;
+            min-width: 0;
+            color: #fff;
+            font-weight: 500;
+            font-size: 1rem;
+        }
+        .food-price {
+            min-width: 85px;
+            text-align: right;
+            color: #ffe620;
+            font-weight: 600;
+            font-size: 1rem;
+            margin-left: 34px;
+            margin-top: 2px;
+        }
+        .btn-submit, .btn-request, .btn-confirm {
+            margin-top: 18px;
+            padding: 16px 15px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 700;
+            font-size: 1.2rem;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s;
+            letter-spacing: 0.7px;
+            box-shadow: 0 0 18px #ffe62077;
+        }
+        .btn-submit {
+            background: #ffe620;
+            color: #102f4b;
+        }
+        .btn-submit:hover {
+            background: #ffd839;
+        }
+        .btn-request {
+            background: #0396c6;
+            color: #fff;
+            box-shadow: 0 0 18px #03a9f41a;
+        }
+        .btn-request:hover {
+            background: #0280b7;
+        }
+        .btn-confirm {
+            background: #28a745;
+            color: #fff;
+            box-shadow: 0 0 18px #28a745cc;
+            display: none;
+        }
+        .btn-confirm:hover {
+            background: #218838;
+        }
+        #roomCostBox {
+            margin-top: 20px;
+            padding: 15px 20px;
+            background: #1a3764;
+            border-radius: 12px;
+            box-shadow: 0 0 15px #ffe620aa;
+            font-size: 1.1rem;
+            color: #ffe620;
+            font-weight: 700;
+            display: none;
+            text-align: center;
+        }
+        @media (max-width: 800px) {
+            .booking-wrapper {
+                flex-direction: column;
+                max-width: 98vw;
+                margin: 22px auto;
+            }
+            .form-panel {
+                padding: 28px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="booking-wrapper">
+        <!-- Illustration Left -->
+        <div class="illustration-panel">
+            <div class="illustration-header">
+                <div class="pic-title">Hotel Booking Form</div>
+                <div class="pic-caption">
+                    Please place online reservation at least 3 days in advance by simply completing the form and request booking to us.
+                </div>
+            </div>
+            <div class="illustration-content">
+                <img src="{{ url_for('static', filename='images/new.jpg') }}" alt="Hotel Illustration" draggable="false" loading="lazy">
+            </div>
+        </div>
+        <!-- Right Panel -->
+        <div class="form-panel">
+            <h2 class="reservation-heading">Reservation Information</h2>
+            <form method="POST" class="booking-form" id="bookingForm">
+                <label for="room_type">Room type</label>
+                <select name="room_type" id="room_type" required>
+                    <option value="" disabled selected>Select room type</option>
+                    <option value="Single">Single</option>
+                    <option value="Double">Double</option>
+                    <option value="Suite">Suite</option>
+                </select>
+
+                <label for="room_id">Room Number</label>
+                <select name="room_id" id="room_id" disabled required>
+                    <option value="" disabled selected>Select room number</option>
+                </select>
+
+                <label for="check_in">Check-in date</label>
+                <input type="date" id="check_in" name="check_in" required>
+
+                <label for="check_out">Check-out date</label>
+                <input type="date" id="check_out" name="check_out" required>
+
+                <label for="num_guests">Number of guests</label>
+                <select name="num_guests" id="num_guests" required>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                </select>
+
+                <div class="form-section-title">Food Items (Staff Menu)</div>
+                <div class="food-items-list">
+                    {% for food in food_items_menu %}
+                    <div class="food-item-row">
+                        <span class="food-name">{{ food.food_name }}</span>
+                        {% if food.price %}
+                        <span class="food-price">₹{{ food.price }}</span>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+                <!-- After existing food items selection -->
+<div class="form-group">
+  <label for="custom_food">Add Custom Food Items (₹250 per item)</label>
+  <textarea id="custom_food" name="custom_food" rows="3" placeholder="Write down your custom food requests here..." class="form-control"></textarea>
+  <small class="form-text text-muted">Each custom food item will be charged at ₹250</small>
+</div>
+
+
+                <div class="form-section-title">Personal Information</div>
+                <label for="phone_number">Phone number</label>
+                <input type="tel" id="phone_number" name="phone_number" placeholder="Enter your phone number" required>
+
+                <!-- Buttons -->
+                <button type="button" id="requestButton" class="btn-request">Request Booking</button>
+                <div id="roomCostBox"></div>
+                <button type="submit" id="confirmButton" class="btn-confirm">Confirm Booking</button>
+            </form>
+        </div>
+    </div>
+
+<script>
+    const rooms = {{ rooms|tojson|safe }};
+
+    const roomTypeSelect = document.getElementById('room_type');
+    const roomIdSelect = document.getElementById('room_id');
+    const bookingForm = document.getElementById('bookingForm');
+    const roomCostBox = document.getElementById('roomCostBox');
+    const requestButton = document.getElementById('requestButton');
+    const confirmButton = document.getElementById('confirmButton');
+
+    // Initialize
+    confirmButton.style.display = 'none';
+    roomCostBox.style.display = 'none';
+    roomIdSelect.disabled = true;
+
+    // Populate rooms based on room type
+    roomTypeSelect.addEventListener('change', () => {
+        const selectedType = roomTypeSelect.value;
+        roomIdSelect.innerHTML = '<option value="" disabled selected>Select room number</option>';
+        roomIdSelect.disabled = true;
+        if (!selectedType) return;
+        const filteredRooms = rooms.filter(room => room.room_type === selectedType);
+        filteredRooms.forEach(room => {
+            const option = document.createElement('option');
+            option.value = room.id;
+            option.textContent = `Room ${room.room_number} — ₹${room.price}`;
+            roomIdSelect.appendChild(option);
+        });
+        if (filteredRooms.length > 0) {
+            roomIdSelect.disabled = false;
+        }
+    });
+
+    // Handle request booking click
+    requestButton.addEventListener('click', function(e) {
+    e.preventDefault();
+
+    // Validate inputs
+    if (!roomTypeSelect.value) {
+        alert('Please select a room type.');
+        return;
+    }
+    if (!roomIdSelect.value) {
+        alert('Please select a room number.');
+        return;
+    }
+    const checkIn = document.getElementById('check_in').value;
+    const checkOut = document.getElementById('check_out').value;
+    if (!checkIn || !checkOut) {
+        alert('Please select both check-in and check-out dates.');
+        return;
+    }
+    if (new Date(checkOut) <= new Date(checkIn)) {
+        alert('Check-out date must be after check-in date.');
+        return;
+    }
+    const numGuestsSelect = document.getElementById('num_guests');
+    const numGuests = parseInt(numGuestsSelect.value);
+    if (!numGuests || numGuests < 1) {
+        alert('Please select a valid number of guests.');
+        return;
+    }
+
+    // Calculate nights
+    const ONE_DAY = 1000 * 60 * 60 * 24;
+    const checkInDate = new Date(checkIn);
+    const checkOutDate = new Date(checkOut);
+    const nights = Math.round((checkOutDate - checkInDate) / ONE_DAY);
+
+    // Get selected room price
+    const selectedRoom = rooms.find(r => r.id == roomIdSelect.value);
+    if (!selectedRoom) {
+        alert('Invalid room selected.');
+        return;
+    }
+
+    // New total cost formula:
+    // Total = (room price per night * nights) + ₹500 per extra guest (guest count - 1)
+    let totalCost = selectedRoom.price * nights;
+    if (numGuests > 1) {
+        totalCost += 500 * (numGuests - 1);
+    }
+
+    // Show room cost and toggle buttons
+    roomCostBox.textContent = `Total cost for ${nights} night(s) and ${numGuests} guest(s): ₹${totalCost.toFixed(2)}`;
+    roomCostBox.style.display = 'block';
+
+    requestButton.style.display = 'none';
+    confirmButton.style.display = 'block';
+
+    roomCostBox.scrollIntoView({ behavior: 'smooth' });
+});
+
+</script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+body {
+    padding: 1.5em;
+    font-family: Arial, sans-serif;
+    background: #f3f3f7;
+}
+header {
+    float: right;
+    margin-bottom: 1em;
+}
+a {
+    margin: 0 8px;
+    color: #124;
+}
+form {
+    margin: 1em 0 .5em 0;
+}
+table {
+    border-collapse: collapse;
+    width: 80%;
+    margin-top: 1em;
+    background: #fff;
+}
+th, td {
+    border: 1px solid #abc;
+    padding: .5em 1em;
+}

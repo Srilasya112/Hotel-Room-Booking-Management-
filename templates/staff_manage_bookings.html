@@ -1,0 +1,78 @@
+{% extends "staff_base.html" %}
+{% set page = 'manage_bookings' %}
+{% block title %}Manage Bookings{% endblock %}
+
+{% block content %}
+<h2 class="mb-4 text-primary">Manage Bookings</h2>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+<table class="table table-bordered bg-white">
+    <thead class="table-light">
+        <tr>
+            <th>Guest</th>
+            <th>Hotel</th>
+            <th>Room</th>
+            <th>Food Ordered</th>
+            <th>Number of Guests</th>
+            <th>Phone Number</th>
+            <th>Check-in</th>
+            <th>Check-out</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% if bookings %}
+      {% for booking in bookings %}
+        <tr>
+          <td>{{ booking.guest_name }}</td>
+          <td>{{ booking.hotel_name }}</td>
+          <td>Room {{ booking.room_number }} ({{ booking.room_type }})</td>
+          <td>
+            {% if booking.food_selected %}
+              {% set foods = booking.food_selected.split(',') %}
+              <ul class="mb-0 ps-3">
+                {% for food in foods %}
+                  <li>{{ food.strip() }}</li>
+                {% endfor %}
+              </ul>
+            {% else %}
+              <em>-</em>
+            {% endif %}
+          </td>
+          <td>{{ booking.num_guests or '-' }}</td>
+          <td>{{ booking.phone_number or '-' }}</td>
+          <td>{{ booking.check_in or '-' }}</td>
+          <td>{{ booking.check_out or '-' }}</td>
+          <td>
+            {% if booking.status %}
+              {% if booking.status.lower() == 'confirmed' %}
+                <span class="badge bg-success">{{ booking.status }}</span>
+              {% elif booking.status.lower() == 'pending' %}
+                <span class="badge bg-warning text-dark">{{ booking.status }}</span>
+              {% elif booking.status.lower() == 'cancelled' %}
+                <span class="badge bg-danger">{{ booking.status }}</span>
+              {% else %}
+                {{ booking.status }}
+              {% endif %}
+            {% else %}
+              <em>-</em>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    {% else %}
+      <tr><td colspan="9" class="text-center fst-italic">No bookings found.</td></tr>
+    {% endif %}
+    </tbody>
+</table>
+{% endblock %}

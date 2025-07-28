@@ -1,0 +1,48 @@
+{% extends "staff_base.html" %}
+{% set page = 'staff_foods' %}
+{% block title %}Add Food Item{% endblock %}
+
+{% block content %}
+<h2 class="mb-4 text-primary">Add New Food Item</h2>
+<form method="POST" enctype="multipart/form-data" class="mb-4">
+    <div class="mb-3">
+        <label>Hotel</label>
+        <input type="text" class="form-control" value="{{ hotel.hotel_name }}" readonly>
+        <input type="hidden" name="hotel_id" value="{{ hotel.id }}">
+    </div>
+    <div class="mb-3">
+        <label>Food Name</label>
+        <input name="food_name" class="form-control" required>
+    </div>
+    <div class="mb-3">
+        <label>Price</label>
+        <input name="price" type="number" class="form-control" step="0.01" required>
+    </div>
+    <div class="mb-3">
+        <label>Add Photo</label>
+        <input name="image" type="file" class="form-control" accept="image/*" required>
+    </div>
+    <button type="submit" class="btn btn-success">Add Food Item</button>
+</form>
+
+<h3>Food Items Added</h3>
+<table class="table table-striped bg-white">
+    <tr>
+        <th>ID</th><th>Name</th><th>Price</th><th>Image</th>
+    </tr>
+    {% for food in food_items %}
+    <tr>
+        <td>{{ food.id }}</td>
+        <td>{{ food.food_name }}</td>
+        <td>{{ food.price }}</td>
+        <td>
+            {% if food.image_path %}
+                <img src="{{ url_for('static', filename='food_images/' ~ food.image_path) }}" width="60">
+            {% else %}
+                No image
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

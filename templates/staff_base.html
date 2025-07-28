@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}Staff Panel{% endblock %}</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background: #f8faf4;
+        }
+        .navbar-dark.bg-dark {
+            background: #22333B !important;
+            box-shadow: 0 2px 24px #22333b14;
+        }
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.26rem;
+            letter-spacing: 1px;
+            color: #18b288 !important;
+            text-shadow: 1px 2px 7px #56dac947;
+        }
+        .btn-light {
+            border-radius: 6px;
+            font-weight: 500;
+            transition: box-shadow .18s, color .19s, background .18s;
+        }
+        .btn-light:hover, .btn-light:focus {
+            background: #e5f5ea !important;
+            color: #0a8958 !important;
+        }
+        /* Sidebar styles */
+        .bg-white.border-end {
+            background: #fff !important;
+            border-right: 2px solid #e7ecec !important;
+            min-height: 82vh;
+            box-shadow: 6px 0 18px 0 rgba(49,61,54,0.04);
+            animation: sidebarIn .8s cubic-bezier(.01,.73,.67,.99) both;
+        }
+        .nav.flex-column .nav-link {
+            color: #2d4137da;
+            font-weight: 500;
+            border-radius: 7px;
+            margin: 3px 0;
+            transition: .22s cubic-bezier(.28,1.2,.65,.98);
+            padding-left: 22px;
+            position: relative;
+            overflow: hidden;
+        }
+        .nav.flex-column .nav-link.active, .nav.flex-column .nav-link:focus {
+            background: linear-gradient(90deg, #e1fdf0 58%, #f4fcf5 100%);
+            color: #16926c !important;
+            font-weight: 700;
+            box-shadow: 0 3px 9px 0 rgba(33,179,120,0.07);
+        }
+        .nav.flex-column .nav-link:not(.active):hover {
+            background: #f5faf7 !important;
+            color: #199270 !important;
+            font-weight: 600;
+            transform: translateX(6px) scale(1.06);
+        }
+        .nav.flex-column .nav-link::before {
+            content: '';
+            display: block;
+            position: absolute;
+            left: 9px; top: 0; bottom: 0;
+            width: 4px;
+            background: #23b791;
+            opacity: 0;
+            border-radius: 6px;
+            transition: opacity .22s,background .12s;
+        }
+        .nav.flex-column .nav-link.active::before, 
+        .nav.flex-column .nav-link:hover::before, 
+        .nav.flex-column .nav-link:focus::before {
+            opacity: 1;
+            background: #23b791;
+        }
+        h6.fw-bold.ps-2 {
+            letter-spacing: .4px;
+            color: #1c493b !important;
+            margin-bottom: 16px;
+        }
+        .col-md-10.pt-4 {
+            animation: fadeInContent 1.08s cubic-bezier(.19,.95,.42,1.08) .13s both;
+        }
+        @keyframes sidebarIn {
+            from { opacity: 0; transform: translateX(-46px) scale(.96);}
+            to   { opacity: 1; transform: none;}
+        }
+        @keyframes fadeInContent {
+            from { opacity: 0; transform: translateY(34px);}
+            to   { opacity: 1; transform: none;}
+        }
+        /* Ripple effect on nav-link click (subtle green) */
+        .nav.flex-column .nav-link:active::after {
+            content: '';
+            position: absolute;
+            left: 50%; top: 50%;
+            width: 120%;
+            height: 80%;
+            background: rgba(34, 183, 145, 0.11);
+            border-radius: 50%;
+            transform: translate(-50%, -50%) scale(1.18);
+            animation: navRipple .35s cubic-bezier(.12,.81,.5,1.3);
+            z-index: 0;
+        }
+        @keyframes navRipple {
+            from { opacity: 0.12; transform: scale(0.7);}
+            to { opacity: 0; transform: scale(1.2);}
+        }
+        @media (max-width: 900px) {
+            .col-md-2 {
+                min-height: 0 !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Staff Panel</a>
+            <div class="collapse navbar-collapse justify-content-end">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('staff_dashboard') }}">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('add_hotel') }}">Add Hotel</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('add_room') }}">Add Room</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('staff_foods') }}">Add Food Item</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('manage_bookings') }}">Manage Bookings</a></li>
+                </ul>
+                <a class="btn btn-light ms-3" href="{{ url_for('logout') }}">Logout</a>
+            </div>
+        </div>
+    </nav>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-2 bg-white border-end pt-4" style="min-height:80vh;">
+                <h6 class="fw-bold ps-2">Staff Panel</h6>
+                <ul class="nav flex-column mt-3">
+                    <li class="nav-item"><a class="nav-link {% if page=='dashboard' %}active{% endif %}" href="{{ url_for('staff_dashboard') }}">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link {% if page=='add_hotel' %}active{% endif %}" href="{{ url_for('add_hotel') }}">Add Hotel</a></li>
+                    <li class="nav-item"><a class="nav-link {% if page=='add_room' %}active{% endif %}" href="{{ url_for('add_room') }}">Add Room</a></li>
+                    <li class="nav-item"><a class="nav-link {% if page=='staff_foods' %}active{% endif %}" href="{{ url_for('staff_foods') }}">Add Food Item</a></li>
+                    <li class="nav-item"><a class="nav-link {% if page=='manage_bookings' %}active{% endif %}" href="{{ url_for('manage_bookings') }}">Manage Bookings</a></li>
+                </ul>
+            </div>
+            <!-- Main content -->
+            <div class="col-md-10 pt-4">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
