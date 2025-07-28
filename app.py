@@ -16,12 +16,10 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-
 def get_db():
     conn = sqlite3.connect(DATABASE)
     conn.row_factory = sqlite3.Row
     return conn
-
 
 def init_db():
     with get_db() as db:
@@ -78,7 +76,7 @@ def init_db():
             FOREIGN KEY(hotel_id) REFERENCES hotels(id)
         )""")
 
-# Run DB init if DB or folders do not exist
+
 if not os.path.exists(DATABASE):
     init_db()
 if not os.path.exists(UPLOAD_FOLDER):
@@ -194,7 +192,6 @@ def add_hotel():
             os.makedirs(upload_folder)
         file.save(os.path.join(upload_folder, filename))
 
-        # Save to DB including new columns phone_number, staff_email, hotel_image_path
         db = get_db()
         try:
             db.execute(
@@ -245,17 +242,26 @@ def add_room():
 def staff_foods():
     if session.get('role') != 'staff':
         return redirect(url_for('signin'))
+
     db = get_db()
     hotels = db.execute("SELECT * FROM hotels WHERE staff_id=?", (session['user_id'],)).fetchall()
-    hotel = hotels[0] if hotels else None
-    if not hotel:
+    if not hotels:
         flash("Please add hotel details first.")
         return redirect(url_for('add_hotel'))
+
+    # Step 1: Determine which hotel is selected
+    hotel_id = request.form.get('hotel_id') if request.method == 'POST' else request.args.get('hotel_id')
+    if hotel_id:
+        selected_hotel = next((h for h in hotels if str(h['id']) == str(hotel_id)), hotels[0])
+    else:
+        selected_hotel = hotels[0]
+
+    # Step 2: Handle Form Submission
     if request.method == 'POST':
         food_name = request.form['food_name']
-        price = float(request.form['price'])
+        price = request.form['price']
         file = request.files['image']
-        if not food_name or not price or not file:
+        if not food_name or not price or not file or not hotel_id:
             flash("All fields required!", "danger")
         elif not allowed_file(file.filename):
             flash("Invalid file format! Only jpg/jpeg/png/gif allowed.", "danger")
@@ -265,12 +271,21 @@ def staff_foods():
             file.save(filepath)
             db.execute(
                 "INSERT INTO food_items (hotel_id, food_name, price, image_path) VALUES (?, ?, ?, ?)",
-                (hotel['id'], food_name, price, filename))
+                (hotel_id, food_name, float(price), filename))
             db.commit()
             flash("Food item added!", "success")
-        return redirect(url_for('staff_foods'))
-    food_items = db.execute("SELECT * FROM food_items WHERE hotel_id=?", (hotel['id'],)).fetchall()
-    return render_template('staff_foods.html', food_items=food_items, hotel=hotel)
+            # stay on the same hotel selection
+            return redirect(url_for('staff_foods', hotel_id=hotel_id))
+
+    # Step 3: Food list for selected hotel
+    food_items = db.execute("SELECT * FROM food_items WHERE hotel_id=?", (selected_hotel['id'],)).fetchall()
+
+    return render_template(
+        'staff_foods.html',
+        hotels=hotels,
+        selected_hotel=selected_hotel,
+        food_items=food_items
+    )
 
 
 @app.route('/staff/manage_bookings')
@@ -316,7 +331,7 @@ def guest_dashboard():
             h.hotel_name, 
             h.address,
             h.hotel_image_path,
-            h.phone_number,
+            h.phone_number AS hotel_phone_number,
             h.staff_email
         FROM bookings b
         JOIN hotels h ON b.hotel_id = h.id

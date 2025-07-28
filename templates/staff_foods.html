@@ -3,13 +3,18 @@
 {% block title %}Add Food Item{% endblock %}
 
 {% block content %}
-<h2 class="mb-4 text-primary">Add New Food Item</h2>
+<h2 style="color:#00796b; font-size:28px; margin-bottom:28px;">Add New Food Item</h2>
 <form method="POST" enctype="multipart/form-data" class="mb-4">
-    <div class="mb-3">
-        <label>Hotel</label>
-        <input type="text" class="form-control" value="{{ hotel.hotel_name }}" readonly>
-        <input type="hidden" name="hotel_id" value="{{ hotel.id }}">
-    </div>
+   <div class="mb-3">
+    <label>Hotel</label>
+    <select name="hotel_id" class="form-control" required onchange="this.form.submit()">
+        {% for h in hotels %}
+            <option value="{{ h.id }}" {% if selected_hotel and h.id == selected_hotel.id %}selected{% endif %}>
+                {{ h.hotel_name }}
+            </option>
+        {% endfor %}
+    </select>
+</div>
     <div class="mb-3">
         <label>Food Name</label>
         <input name="food_name" class="form-control" required>
